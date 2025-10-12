@@ -55,85 +55,96 @@ const UploadSong = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen py-10 text-white px-5 bg-slate-800 space-y-5 pb-10 lg:p-20">
-       <h1 className="text-3xl font-bold text-center lg:text-4xl">Upload Song</h1>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white py-10 px-5 lg:p-20">
+      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+        <h1 className="text-3xl font-bold text-center text-indigo-600 mb-8">Upload Your Song</h1>
 
-      <form
-        onSubmit={handleSubmit}
-        encType="multipart/form-data"
-        className="flex flex-col lg:m-5 text-xl space-y-5"
-      >
-        <div className="flex flex-col space-y-2 lg:px-5">
-          <label className="px-2" htmlFor="title">
-            Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            className=" px-5 text-sm bg-slate-100 border-b-blue-200 border-b-2 rounded-md text-gray-900 placeholder:text-gray-350 h-10 outline-none"
-            placeholder="Enter the title name"
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex flex-col space-y-2 lg:px-5">
-          <label className="px-2" htmlFor="title">
-            Description
-          </label>
-          <input
-            type="text"
-            name="title"
-            className=" px-5 text-sm bg-slate-100 border-b-blue-200 border-b-2 rounded-md placeholder:text-gray-350 text-gray-900  h-10 outline-none"
-            placeholder="Enter the description"
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex flex-col space-y-2 lg:px-5">
-          <label className="px-2" htmlFor="title">
-            Artist
-          </label>
-          <input
-            type="text"
-            name="title"
-            className=" px-5 text-sm bg-slate-100 border-b-blue-200 border-b-2 rounded-md placeholder:text-gray-350 text-gray-900 h-10 outline-none"
-            placeholder="Enter the artist name"
-            onChange={(e) => setArtist(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex flex-col space-y-2 lg:px-5">
-          <label className="px-2" htmlFor="title">
-            Cover Album
-          </label>
-          <input
-            type="text"
-            name="title"
-            className=" px-5 text-sm bg-slate-100 border-b-blue-200 border-b-2 rounded-md placeholder:text-gray-350 text-gray-900 h-10 outline-none"
-            placeholder="Enter the album name"
-            onChange={(e) => setAlbum(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="flex flex-col space-y-2 lg:px-5">
-          <label htmlFor="audioFile">Audio File</label>
-          <input
-            onChange={handleFileChange}
-            type="file"
-            name="file"
-            accept="audio/*"
-            required
-          />
-        </div>
-        <button
-          className="bg-[#ffd700] text-[#7d0000] text-sm  py-1 rounded-xl w-32 lg:mx-4"
-          type="submit"
-          disabled={localStorage.getItem("access_token") ? false : true}
+        <form
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+          className="space-y-6"
         >
-          Submit
-        </button>
-      </form>
+          <div className="space-y-4">
+            <label className="block text-gray-700 font-medium" htmlFor="title">
+              Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-colors duration-200 outline-none text-gray-700"
+              placeholder="Enter the song title"
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="space-y-4">
+            <label className="block text-gray-700 font-medium" htmlFor="description">
+              Description
+            </label>
+            <textarea
+              name="description"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-colors duration-200 outline-none text-gray-700 resize-none"
+              placeholder="Enter the song description"
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              rows="3"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <label className="block text-gray-700 font-medium" htmlFor="artist">
+              Artist
+            </label>
+            <input
+              type="text"
+              name="artist"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-colors duration-200 outline-none text-gray-700"
+              placeholder="Enter the artist name"
+              onChange={(e) => setArtist(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="space-y-4">
+            <label className="block text-gray-700 font-medium" htmlFor="album">
+              Album
+            </label>
+            <input
+              type="text"
+              name="album"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-colors duration-200 outline-none text-gray-700"
+              placeholder="Enter the album name"
+              onChange={(e) => setAlbum(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="space-y-4">
+            <label className="block text-gray-700 font-medium" htmlFor="audioFile">
+              Audio File
+            </label>
+            <div className="relative">
+              <input
+                onChange={handleFileChange}
+                type="file"
+                name="file"
+                accept="audio/*"
+                required
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-colors duration-200 outline-none text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+              />
+            </div>
+          </div>
+
+          <button
+            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            type="submit"
+            disabled={!localStorage.getItem("access_token")}
+          >
+            Upload Song
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

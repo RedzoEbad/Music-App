@@ -9,7 +9,7 @@ import { SongContext } from "../Context/SongContext";
 import { QueueContext } from "../Context/QueueContex";
 
 import { GrFormAdd } from "react-icons/gr";
-
+import { FaMusic } from "react-icons/fa";
 
 const CreatePlaylist = () => {
   const {fetchPlaylist} = useContext(FetchContext)
@@ -65,7 +65,6 @@ const CreatePlaylist = () => {
     setPlaylists(data["playlists"]);
   };
 
-
   useEffect(() => {
     if (showMenu) setShowMenu(false);
     setLoading(true);
@@ -74,60 +73,95 @@ const CreatePlaylist = () => {
   }, [fetchPlaylist]);
 
   return (
-    <div className="bg-slate-800 text-teal-200 flex justify-start flex-col p-5 space-y-10 min-h-screen pb-32 ">
-      <p className="text-2xl">All Playlists</p>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+          <div className="flex items-center space-x-4 mb-6 md:mb-0">
+            <div className="bg-indigo-500 p-3 rounded-xl shadow-lg">
+              <FaMusic className="text-white text-2xl" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800">Your Playlists</h1>
+              <p className="text-gray-600 mt-1">Create and manage your music collections</p>
+            </div>
+          </div>
+          <button
+            onClick={createCardOpen}
+            className="bg-indigo-500 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-600 transition-all duration-200 flex items-center space-x-2 group"
+          >
+            <GrFormAdd size={20} className="group-hover:rotate-90 transition-transform duration-200" />
+            <span>Create New Playlist</span>
+          </button>
+        </div>
 
-      {/* <---------------------------Playlist cards-----------------> */}
-      {loading && playlists == null ? (
-        <div>loading...</div>
-      ) : !loading && playlists ? (
-        playlists.map((playlist) => {
-          return (
-            <PlaylistCard
-              key={playlist._id}
-              playlistName={playlist.playlistName}
-              playlistId={playlist._id}
-              noSongs={playlist.songs.length}
-            />
-          );
-        })
-      ) : (
-        <div className="flex justify-center items-center text-2xl">No Playlists Found</div>
-      )}
-      {/* <---------------------------Create playlist button and card-----------------> */}
-
-      <div
-        onClick={createCardOpen}
-        className="bg-[#ffd700] fixed rounded-xl px-2 text-lg  bottom-20 right-5 flex justify-center items-center space-x-1 cursor-pointer"
-      >
-        <GrFormAdd />
-        <span className="text-gray-900">Create Playlist</span>
-      </div>
-      {/* Create PlayList Card */}
-      {cretePlaylist && (
-        <div className="bg-gray-900 fixed top-0 left-0 w-full h-full flex justify-center items-center">
-          <div className="bg-white p-10 flex flex-col justify-center items-center space-y-5 rounded-xl relative">
+        {/* Playlist Grid */}
+        {loading && playlists == null ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
+          </div>
+        ) : !loading && playlists ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {playlists.map((playlist) => (
+              <PlaylistCard
+                key={playlist._id}
+                playlistName={playlist.playlistName}
+                playlistId={playlist._id}
+                noSongs={playlist.songs.length}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-indigo-100">
+            <div className="bg-indigo-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FaMusic className="text-indigo-500 text-3xl" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">No Playlists Yet</h3>
+            <p className="text-gray-600 mb-6">Start creating your first playlist to organize your music</p>
             <button
-              onClick={createCardClose}
-              className="absolute top-2 right-5 text-black"
+              onClick={createCardOpen}
+              className="bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-600 transition-colors duration-200"
             >
-              close
-            </button>
-            <input
-              type="text"
-              id="playlistName"
-              placeholder="Playlist Name"
-              className="w-3/4 h-10 outline-none border-b-black text-gray-900 border-b-[1px]"
-            />
-            <button
-              onClick={createPlaylist}
-              className="bg-[#ffd700] px-5 py-1 rounded-md lg:rounded-xl shadow-lg text-[#7d0000] text-sm "
-            >
-              Create
+              Create Your First Playlist
             </button>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Create Playlist Modal */}
+        {cretePlaylist && (
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-8 w-full max-w-md relative transform transition-all shadow-xl">
+              <button
+                onClick={createCardClose}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <div className="text-center mb-6">
+                <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaMusic className="text-indigo-500 text-2xl" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800">Create New Playlist</h2>
+                <p className="text-gray-600 mt-2">Give your playlist a unique name</p>
+              </div>
+              <input
+                type="text"
+                id="playlistName"
+                placeholder="Enter playlist name"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 mb-6 transition-all duration-200"
+              />
+              <button
+                onClick={createPlaylist}
+                className="w-full bg-indigo-500 text-white py-3 rounded-xl hover:bg-indigo-600 transition-all duration-200 font-medium"
+              >
+                Create Playlist
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
