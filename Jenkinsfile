@@ -1,7 +1,7 @@
 pipeline{
     agent any
      tools {
-        nodejs 'NodeJS 20'  // <-- match the "Name" field exactly
+          nodejs 'NodeJS 20.' // <-- match the "Name" field exactly
     }
     stages{
         stage('Checkout Code'){
