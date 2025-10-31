@@ -9,16 +9,20 @@ pipeline{
                 git branch : 'main', url: 'https://github.com/RedzoEbad/Music-App.git'
             }
         }
-        stage('Install Dependencies'){
-            steps {
-                sh 'npm install'
-            }
-        }
-        stage('Verify Node') {
-    steps {
-        sh 'node -v'
-        sh 'npm -v'
-    }
-}
+        stage('cook'){
+        steps{
+            echo "cook food"
+        }}
+//         stage('Install Dependencies'){
+//             steps {
+//                 sh 'npm install'
+//             }
+//         }
+//         stage('Verify Node') {
+//     steps {
+//         sh 'node -v'
+//         sh 'npm -v'
+//     }
+// }
     }
 }
