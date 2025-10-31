@@ -1,28 +1,22 @@
-pipeline{
-    agent any
-     tools {
-          nodejs 'node' // <-- match the "Name" field exactly
+pipeline {
+    agent {
+        docker { image 'node:20-bullseye' }
     }
-    stages{
-        stage('Checkout Code'){
-            steps{
-                git branch : 'main', url: 'https://github.com/RedzoEbad/Music-App.git'
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/RedzoEbad/Music-App.git'
             }
         }
-        stage('cook'){
-        steps{
-            echo "cook food"
-        }}
-//         stage('Install Dependencies'){
-//             steps {
-//                 sh 'npm install'
-//             }
-//         }
-//         stage('Verify Node') {
-//     steps {
-//         sh 'node -v'
-//         sh 'npm -v'
-//     }
-// }
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Version') {
+            steps {
+                sh 'node -v'
+            }
+        }
     }
 }
