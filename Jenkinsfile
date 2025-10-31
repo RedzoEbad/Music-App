@@ -1,7 +1,7 @@
 pipeline{
     agent any
      tools {
-          nodejs 'NodeJS 20.' // <-- match the "Name" field exactly
+          nodejs 'node' // <-- match the "Name" field exactly
     }
     stages{
         stage('Checkout Code'){
@@ -14,5 +14,11 @@ pipeline{
                 sh 'npm install'
             }
         }
+        stage('Verify Node') {
+    steps {
+        sh 'node -v'
+        sh 'npm -v'
+    }
+}
     }
 }
