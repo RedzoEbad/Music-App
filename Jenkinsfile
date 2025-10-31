@@ -6,12 +6,21 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/RedzoEbad/Music-App.git'
             }
         }
-        stage('Install Dependencies') {
+        stage('Install Frontend Dependencies') {
             steps {
-                sh 'npm install'
+                dir('frontend') {
+                    sh 'npm install'
+                }
             }
         }
-        stage('Version') {
+        stage('Install Backend Dependencies') {
+            steps {
+                dir('backend') {
+                    sh 'npm install'
+                }
+            }
+        }
+        stage('Print Node Version') {
             steps {
                 sh 'node -v'
             }
