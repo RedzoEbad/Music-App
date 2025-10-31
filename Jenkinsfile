@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        docker { image 'node:20-bullseye' }
-    }
+    agent any
     stages {
         stage('Checkout Code') {
             steps {
