@@ -60,25 +60,29 @@ pipeline {
         }
 
         stage('Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    script {
-                        def imageName = 'ebadkkhan2002/music-app'
-                        def imageTag = 'latest'
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            script {
+                // Images from docker-compose.yml
+                def images = [
+                    'ebadkkhan2002/music-app-backend:latest',
+                    'ebadkkhan2002/music-app-frontend:latest'
+                ]
 
-                        // Login to Docker Hub
-                        sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+                // Login to Docker Hub
+                sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
 
-                        // Push images (built by docker-compose)
-                        sh "docker push ${imageName}:${imageTag}"
-
-                        // Logout
-                        sh "docker logout"
-                    }
+                // Push each image
+                for (img in images) {
+                    sh "docker push ${img}"
                 }
+
+                // Logout
+                sh "docker logout"
             }
         }
-
+    }
+}
         stage('Notification') {
             steps {
                 echo "🎉 Build pipeline completed successfully!"
