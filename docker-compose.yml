@@ -3,14 +3,16 @@ version: '3.9'
 services:
   backend:
     build: ./backend
+    image: ebadkkhan2002/music-app-backend:latest
     container_name: music-backend
     ports:
       - "1337:1337"
     env_file:
       - ./backend/.env
+
   frontend:
     build: ./frontend
+    image: ebadkkhan2002/music-app-frontend:latest
     container_name: music-frontend
     ports:
       - "3000:80"
-    
