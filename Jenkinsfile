@@ -24,9 +24,26 @@ pipeline {
             }
         }
 
+        stage('Run Backend Tests') {
+            steps {
+                dir('backend') {
+                    // 🧪 Run tests with test environment
+                    sh 'cross-env NODE_ENV=test npm test'
+                }
+            }
+            post {
+                success {
+                    echo "✅ Backend tests passed successfully!"
+                }
+                failure {
+                    echo "❌ Some backend tests failed. Check the logs for details."
+                }
+            }
+        }
+
         stage('Notification') {
             steps {
-                echo "✅ Successfully installed dependencies for both frontend and backend!"
+                echo "🎉 Successfully installed dependencies and ran backend tests!"
             }
         }
     }
