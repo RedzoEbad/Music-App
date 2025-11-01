@@ -47,12 +47,13 @@ pipeline {
                 }
             }
         }
-
-      stage('Dockerize Application') {
+stage('Dockerize Application') {
     steps {
-        sh 'sudo docker-compose -f ./docker-compose.yml up -d --build'
+        // Run docker-compose as root
+        sh 'docker-compose -f ./docker-compose.yml up -d --build'
     }
 }
+
 
         stage('Notification') {
             steps {
