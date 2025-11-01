@@ -47,10 +47,11 @@ pipeline {
                 }
             }
         }
-stage('Dockerize Application') {
+ststage('Dockerize Application') {
     steps {
-        // Run docker-compose as root
-        sh 'docker-compose -f ./docker-compose.yml up -d --build'
+        dir('/var/jenkins_home/workspace/newJenkingPipline') {
+            sh 'docker-compose up -d --build'
+        }
     }
 }
 
