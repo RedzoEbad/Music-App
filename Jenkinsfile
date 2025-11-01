@@ -11,7 +11,7 @@ pipeline {
         stage('Install Frontend Dependencies') {
             steps {
                 dir('frontend') {
-                    sh 'npm install'
+                    bat 'npm install'
                 }
             }
         }
@@ -19,7 +19,7 @@ pipeline {
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
-                    sh 'npm install'
+                    bat 'npm install'
                 }
             }
         }
@@ -27,7 +27,7 @@ pipeline {
         stage('Run Backend Tests') {
             steps {
                 dir('backend') {
-                    sh 'npx cross-env NODE_ENV=test npm test'
+                    bat 'npx cross-env NODE_ENV=test npm test'
                 }
             }
         }
@@ -35,8 +35,7 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
-                    // Build the production-ready frontend bundle
-                    sh 'npm run build'
+                    bat 'npm run build'
                 }
             }
             post {
@@ -46,6 +45,13 @@ pipeline {
                 failure {
                     echo '❌ Error occurred during the frontend build stage!'
                 }
+            }
+        }
+
+        stage('Dockerize Application') {
+            steps {
+                // Run docker-compose on Windows host
+                bat 'docker-compose -f D:\\OnlyValidProjectsForNodeJs\\Music-App\\docker-compose.yml up -d --build'
             }
         }
 
