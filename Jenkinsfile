@@ -11,7 +11,7 @@ pipeline {
         stage('Install Frontend Dependencies') {
             steps {
                 dir('frontend') {
-                    sh 'npm install'  // use 'bat' if running on Windows
+                    sh 'npm install'
                 }
             }
         }
@@ -19,7 +19,7 @@ pipeline {
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
-                    sh 'npm install'  // use 'bat' if on Windows
+                    sh 'npm install'
                 }
             }
         }
@@ -27,23 +27,31 @@ pipeline {
         stage('Run Backend Tests') {
             steps {
                 dir('backend') {
-                    // 🧪 Run tests with test environment
-                    sh 'cross-env NODE_ENV=test npm test'
+                    sh 'npx cross-env NODE_ENV=test npm test'
+                }
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    // Build the production-ready frontend bundle
+                    sh 'npm run build'
                 }
             }
             post {
                 success {
-                    echo "✅ Backend tests passed successfully!"
+                    echo '✅ Successfully built your frontend!'
                 }
                 failure {
-                    echo "❌ Some backend tests failed. Check the logs for details."
+                    echo '❌ Error occurred during the frontend build stage!'
                 }
             }
         }
 
         stage('Notification') {
             steps {
-                echo "🎉 Successfully installed dependencies and ran backend tests!"
+                echo "🎉 Build pipeline completed successfully!"
             }
         }
     }
