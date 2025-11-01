@@ -51,7 +51,7 @@ pipeline {
         stage('Dockerize Application') {
             steps {
                 // Run docker-compose on Windows host
-                sh 'docker-compose -f D:\\OnlyValidProjectsForNodeJs\\Music-App\\docker-compose.yml up -d --build'
+                  sh 'docker-compose -f ./docker-compose.yml up -d --build'
             }
         }
 
