@@ -58,6 +58,28 @@ pipeline {
         }
     }
 }
+stage('Push to Docker Hub') {
+    steps {
+        script {
+            // Docker Hub credentials
+            def dockerHubUser = 'ebadkkhan2002'
+            def dockerHubPassword = 'noadiza2002'
+            def imageName = 'ebadkkhan2002/music-app'
+            def imageTag = 'latest'
+
+            // Login to Docker Hub
+            sh "echo ${dockerHubPassword} | docker login -u ${dockerHubUser} --password-stdin"
+
+            // Build Docker image (optional if already built by docker-compose)
+            sh "docker build -t ${imageName}:${imageTag} ."
+
+            // Push to Docker Hub
+            sh "docker push ${imageName}:${imageTag}"
+
+            // Logout
+            sh "docker logout"
+        }
+    }
 
         stage('Notification') {
             steps {
