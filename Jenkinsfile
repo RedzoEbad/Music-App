@@ -11,7 +11,7 @@ pipeline {
         stage('Install Frontend Dependencies') {
             steps {
                 dir('frontend') {
-                    bat 'npm install'
+                    sh 'npm install'
                 }
             }
         }
@@ -19,7 +19,7 @@ pipeline {
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
-                    bat 'npm install'
+                    sh 'npm install'
                 }
             }
         }
@@ -27,7 +27,7 @@ pipeline {
         stage('Run Backend Tests') {
             steps {
                 dir('backend') {
-                    bat 'npx cross-env NODE_ENV=test npm test'
+                    sh 'npx cross-env NODE_ENV=test npm test'
                 }
             }
         }
@@ -35,7 +35,7 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
-                    bat 'npm run build'
+                    sh 'npm run build'
                 }
             }
             post {
@@ -51,7 +51,7 @@ pipeline {
         stage('Dockerize Application') {
             steps {
                 // Run docker-compose on Windows host
-                bat 'docker-compose -f D:\\OnlyValidProjectsForNodeJs\\Music-App\\docker-compose.yml up -d --build'
+                sh 'docker-compose -f D:\\OnlyValidProjectsForNodeJs\\Music-App\\docker-compose.yml up -d --build'
             }
         }
 
