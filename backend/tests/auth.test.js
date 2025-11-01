@@ -1,27 +1,40 @@
+// tests/auth.test.js
 import request from "supertest";
+import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import { MongoClient } from "mongodb";
 import bcrypt from "bcryptjs";
-import server from "../server.js"
-import conn from "../config/db.js";
+import server from "../server.js"; // Make sure server.js exports app without app.listen()
+import User from "../models/userSchema.js";
+import { jest } from "@jest/globals";
+
+jest.setTimeout(30000); // 30 seconds timeout for slow DB operations
 
 let mongoServer;
-let client;
 
 beforeAll(async () => {
+  // Start in-memory MongoDB
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
 
-  client = new MongoClient(uri);
-  await client.connect();
-
-  // override the connection with in-memory DB
-  conn.db = (dbName) => client.db(dbName);
+  // Connect Mongoose to in-memory DB
+  await mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 });
 
 afterAll(async () => {
-  await client.close();
+  // Disconnect Mongoose and stop in-memory DB
+  await mongoose.disconnect();
   await mongoServer.stop();
+});
+
+afterEach(async () => {
+  // Clean all collections after each test
+  const collections = mongoose.connection.collections;
+  for (const key in collections) {
+    await collections[key].deleteMany({});
+  }
 });
 
 describe("Auth Controller", () => {
@@ -36,17 +49,21 @@ describe("Auth Controller", () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body.status).toBe("success");
+
+    // Verify user exists in DB
+    const user = await User.findOne({ email: "john@example.com" });
+    expect(user).not.toBeNull();
   });
 
   it("should fail if user already exists", async () => {
-    await request(server)
-      .post("/api/v1/auth/register")
-      .send({
-        fullName: "Jane Doe",
-        email: "jane@example.com",
-        password: "password123",
-      });
+    // Create a user first
+    await User.create({
+      fullName: "Jane Doe",
+      email: "jane@example.com",
+      password: await bcrypt.hash("password123", 10),
+    });
 
+    // Attempt to register again
     const res = await request(server)
       .post("/api/v1/auth/register")
       .send({
@@ -56,15 +73,13 @@ describe("Auth Controller", () => {
       });
 
     expect(res.statusCode).toBe(400);
-    expect(res.text).toContain("User already exists");
+    expect(res.body.message).toContain("User already exists");
   });
 
   it("should login successfully with correct credentials", async () => {
-    const db = client.db("music_streaming");
-    const users = db.collection("users");
-
-    const hashedPassword = bcrypt.hashSync("mypassword", 10);
-    await users.insertOne({
+    const hashedPassword = await bcrypt.hash("mypassword", 10);
+    await User.create({
+      fullName: "Login User", // Required by schema
       email: "login@test.com",
       password: hashedPassword,
     });
@@ -90,6 +105,6 @@ describe("Auth Controller", () => {
       });
 
     expect(res.statusCode).toBe(400);
-    expect(res.text).toContain("User does not exists");
+    expect(res.body.message).toContain("User does not exist"); // Fixed typo
   });
 });
