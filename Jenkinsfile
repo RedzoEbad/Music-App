@@ -28,7 +28,7 @@ pipeline {
             steps {
                 dir('backend') {
                     // 🧪 Run tests with test environment
-                    sh 'cross-env NODE_ENV=test npm test'
+                    sh 'npx cross-env NODE_ENV=test npm test'
                 }
             }
             post {
