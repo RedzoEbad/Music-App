@@ -13,9 +13,16 @@ pipeline {
                 }
             }
         }
-        stage('Version') {
+        stage('Install Dependencies') {
             steps {
-                sh 'node -v'
+                dir('backend'){
+                sh 'npm install'
+                }
+            }
+        }
+        stage('Notification'){
+            steps{
+                echo "you have succesfully instlaled both packe .json "
             }
         }
     }
