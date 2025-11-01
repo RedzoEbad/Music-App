@@ -48,12 +48,11 @@ pipeline {
             }
         }
 
-        stage('Dockerize Application') {
-            steps {
-                // Run docker-compose on Windows host
-                  sh 'docker-compose -f ./docker-compose.yml up -d --build'
-            }
-        }
+      stage('Dockerize Application') {
+    steps {
+        sh 'sudo docker-compose -f ./docker-compose.yml up -d --build'
+    }
+}
 
         stage('Notification') {
             steps {
