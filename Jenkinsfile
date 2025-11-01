@@ -47,14 +47,17 @@ pipeline {
                 }
             }
         }
-ststage('Dockerize Application') {
-    steps {
-        dir('/var/jenkins_home/workspace/newJenkingPipline') {
-            sh 'docker-compose up -d --build'
-        }
-    }
-}
 
+        stage('Dockerize Application') {
+            steps {
+                dir('/var/jenkins_home/workspace/newJenkingPipline') {
+                    sh '''
+                        docker-compose down
+                        docker-compose up -d --build
+                    '''
+                }
+            }
+        }
 
         stage('Notification') {
             steps {
