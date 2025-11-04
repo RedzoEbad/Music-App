@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    environment {
+        // Docker Hub credential ID stored in Jenkins
+        DOCKER_CREDENTIALS_ID = 'DOCKER_HUB_CREDENTIALS'
+    }
 
     stages {
         stage('Checkout Code') {
@@ -40,10 +44,10 @@ pipeline {
             }
             post {
                 success {
-                    echo '✅ Successfully built your frontend!'
+                    echo '✅ Successfully built frontend!'
                 }
                 failure {
-                    echo '❌ Error occurred during the frontend build stage!'
+                    echo '❌ Error during frontend build.'
                 }
             }
         }
@@ -52,7 +56,10 @@ pipeline {
             steps {
                 dir('/var/jenkins_home/workspace/newJenkingPipline') {
                     sh '''
+                        # Stop and remove existing containers
                         docker-compose down
+
+                        # Build and start containers in detached mode
                         docker-compose up -d --build
                     '''
                 }
@@ -60,29 +67,33 @@ pipeline {
         }
 
         stage('Push to Docker Hub') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            script {
-                // Images from docker-compose.yml
-                def images = [
-                    'ebadkkhan2002/music-app-backend:latest',
-                    'ebadkkhan2002/music-app-frontend:latest'
-                ]
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: "${DOCKER_CREDENTIALS_ID}", 
+                    usernameVariable: 'DOCKER_USER', 
+                    passwordVariable: 'DOCKER_PASS')]) 
+                {
+                    script {
+                        def images = [
+                            'ebadkkhan2002/music-app-backend:latest',
+                            'ebadkkhan2002/music-app-frontend:latest'
+                        ]
 
-                // Login to Docker Hub
-                sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+                        // Login to Docker Hub
+                        sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
 
-                // Push each image
-                for (img in images) {
-                    sh "docker push ${img}"
+                        // Push each image
+                        for (img in images) {
+                            sh "docker push ${img}"
+                        }
+
+                        // Logout
+                        sh "docker logout"
+                    }
                 }
-
-                // Logout
-                sh "docker logout"
             }
         }
-    }
-}
+
         stage('Notification') {
             steps {
                 echo "🎉 Build pipeline completed successfully!"

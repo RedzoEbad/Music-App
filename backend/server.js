@@ -34,19 +34,21 @@ if (process.env.NODE_ENV !== "test") {
   console.log("🧪 Skipping MongoDB connection for tests");
 }
 
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(path.resolve(), "public")));
+// ✅ Serve frontend dist folder instead of public
+const __dirname = path.resolve();
+const frontendPath = path.join(__dirname, "dist");
+app.use(express.static(frontendPath));
 
-// Routes
+// API routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/song", userJwtMiddleware, songRoutes);
 app.use("/api/v1/playlist", userJwtMiddleware, playlistRoutes);
 app.get("/api/v1/stream/:filename", streamSong);
 app.get("/api/v1/songs", getSongs);
 
-// Fallback to index.html for SPA
+// ✅ Serve frontend for all other routes (SPA fallback)
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve("public/index.html"));
+  res.sendFile(path.join(frontendPath, "index.html"));
 });
 
 // ✅ Start the server only if not running tests
