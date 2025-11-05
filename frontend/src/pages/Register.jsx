@@ -13,11 +13,8 @@ const Register = () => {
   };
 
   let __URL__ ;
-  if ( document.domain === "localhost" ) {
     __URL__ = "http://localhost:1337";
-  } else {
-    __URL__ = "https://music-player-app-backend-yq0c.onrender.com";
-  }
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
